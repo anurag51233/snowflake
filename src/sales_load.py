@@ -34,20 +34,24 @@ temp_query = f"""
                 FROM {v.get('STG_SCHEMA')}.{v.get('STG_VIEW')} SRC
                 INNER JOIN {v.get('TGT_SCHEMA')}.TGT_D_CUSTOMER CUS
                     ON CUS.CUSTOMER_ID = SRC.CUSTOMER_ID
+                    AND CUS.IS_CURRENT = TRUE
                 INNER JOIN {v.get('TGT_SCHEMA')}.TGT_D_PRODUCT PRD
                     ON PRD.PRODUCT_ID = SRC.PRODUCT_ID
+                    AND PRD.IS_CURRENT = TRUE
                 INNER JOIN {v.get('TGT_SCHEMA')}.TGT_D_LOCATION LOC
                     ON LOC.COUNTRY = SRC.COUNTRY
                     AND LOC.REGION = SRC.REGION
                     AND LOC.STATE = SRC.STATE
                     AND LOC.CITY = SRC.CITY
                     AND LOC.POSTAL_CODE = SRC.POSTAL_CODE
+                    AND LOC.IS_CURRENT = TRUE
                 INNER JOIN {v.get('TGT_SCHEMA')}.TGT_D_DATE ORD_DT
                     ON ORD_DT.FULL_DATE = SRC.ORDER_DATE
                 INNER JOIN {v.get('TGT_SCHEMA')}.TGT_D_DATE SIP_DT
                     ON SIP_DT.FULL_DATE = SRC.SHIP_DATE
                 INNER JOIN {v.get('TGT_SCHEMA')}.TGT_D_SHIP_MODE SHIP
                     ON SHIP.SHIP_MODE = SRC.SHIP_MODE
+                    AND SHIP.IS_CURRENT = TRUE
                 GROUP BY SRC.ORDER_ID, CUS.CUSTOMER_KEY, PRODUCT_KEY, LOCATION_KEY, ORD_DT.DATE_KEY, SIP_DT.DATE_KEY, SHIP.SHIP_MODE_KEY
             """
 sf.execute_query(temp_query)
